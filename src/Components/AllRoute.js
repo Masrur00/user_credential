@@ -2,13 +2,15 @@ import React from 'react'
 import { Routes, Route } from "react-router-dom"
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
-import ProfileUpdate from '../pages/ProfileUpdate';
+import Profile from '../pages/Profile';
 import Forgotpassword from '../pages/Forgotpassword';
+import Setpassword from '../pages/Setpassword';
 import { PrivateRoute } from './PrivateRoute'
+import Updateprofile from '../pages/Updateprofile';
 
 export const AllRoutes = () => {
     return (
-        <div>            
+        <div>
             <Routes>
                 <Route
                     path="/"
@@ -27,15 +29,26 @@ export const AllRoutes = () => {
                     path="/profile"
                     element={
                         <PrivateRoute>
-                            <ProfileUpdate />
+                            <Profile />
                         </PrivateRoute>
+                    }
+                ></Route>
+                <Route
+                    path="/update"
+                    element={
+                        <Updateprofile />
                     }
                 ></Route>
 
                 <Route
                     path={"/forgot"}
-                    element={
-                        <Forgotpassword />
+                    element={                        
+                            <Forgotpassword />                        
+                    }></Route>
+                <Route
+                    path={"/newpassword"}
+                    element={                        
+                            <Setpassword />                        
                     }></Route>
             </Routes>
         </div>

@@ -14,12 +14,16 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { forgot, loginsuccess } from "../Redux/Auth/action";
+import { useDispatch, useSelector } from "react-redux";
+
+import { LOGIN_SUCCESS } from "../Redux/Auth/actionTypes";
+import { forgot, loginsuccess, passwordReset } from "../Redux/Auth/action";
 
 
-function Forgotpassword() {
-  const [Inputvalues, setInputvalues] = useState({});
+function Setpassword() {
+    const [Inputvalues, setInputvalues] = useState({});
+  const link = useSelector(state => state.link);
+  console.log(link);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,12 +36,10 @@ function Forgotpassword() {
   };
 
   const handleSubmit = async () => {
-    console.log(Inputvalues.email)
-    dispatch(forgot(Inputvalues)).then((r) => {
-      console.log("link after giving email", r);
-        navigate('/newpassword')
-    })
- 
+    console.log(link);
+    dispatch(passwordReset(link,Inputvalues)).then((r) => {
+      navigate("/login");
+    });
   };
 
   return (
@@ -49,7 +51,7 @@ function Forgotpassword() {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"2xl"}>Login in </Heading>
+          <Heading fontSize={"2xl"}>Insert your new Password </Heading>
         </Stack>
         <Box
           rounded={"lg"}
@@ -59,11 +61,11 @@ function Forgotpassword() {
         >
           <Stack spacing={4}>
             <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" onChange={handleinput} name={"email"} />
+              <FormLabel>Enter new password</FormLabel>
+              <Input type="password" onChange={handleinput} name={"password"} />
             </FormControl>
-            
-            <Stack spacing={10}>            
+
+            <Stack spacing={10}>
               <Button
                 bg={"blue.400"}
                 color={"white"}
@@ -73,7 +75,7 @@ function Forgotpassword() {
                 onClick={handleSubmit}
               >
                 Submit
-              </Button>              
+              </Button>
             </Stack>
           </Stack>
         </Box>
@@ -82,4 +84,4 @@ function Forgotpassword() {
   );
 }
 
-export default Forgotpassword;
+export default Setpassword;

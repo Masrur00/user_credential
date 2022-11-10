@@ -17,11 +17,15 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signupSucess } from "../Redux/Auth/action";
 import { SIGNUP_SUCCESS } from "../Redux/Auth/actionTypes";
+import { useEffect } from "react";
 
 function Signup() {
+  const isAuth = useSelector(state => state.isAuth)
+  const error = useSelector(state => state.error)
+  const [showEror, setError] = useState(false);
   const [Inputvalues, setInputvalues] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
@@ -34,14 +38,26 @@ function Signup() {
       [name]: value,
     });
   };
-    const handleSubmit = () => {
-        console.log("handleSubmit :", Inputvalues);
-    dispatch(signupSucess(Inputvalues)).then((r) => {
-      if (r === SIGNUP_SUCCESS) {
-        navigate("/login");
-      }
-    });
+
+  const handleSubmit = async() => {
+    console.log("handleSubmit :", Inputvalues);
+    if (Inputvalues.password.length < 8) {
+      alert("Password must be at least 8 characters");
+      return;
+    }
+    dispatch(signupSucess(Inputvalues))   
+   
   };
+
+  useEffect(() => {
+       if (isAuth) {
+         alert("Signup successful");
+         navigate("/profile");
+    }
+    if (error) {
+      setError(true)
+    }
+  },[isAuth,error])
   return (
     <Flex
       minH={"100vh"}
@@ -49,6 +65,7 @@ function Signup() {
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
+      {showEror && <h2 style={{ color: "red" }}>{error}</h2>}
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"2xl"} textAlign={"center"}>
@@ -62,7 +79,7 @@ function Signup() {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="email" isRequired>
+            <FormControl id="email" display={""} isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
                 type="email"
@@ -93,7 +110,7 @@ function Signup() {
               </InputGroup>
             </FormControl>
 
-            <FormControl id="mobile" >
+            <FormControl id="mobile">
               <FormLabel> Mobile</FormLabel>
               <Input
                 type="text"
@@ -102,7 +119,7 @@ function Signup() {
                 name={"mobile"}
               />
             </FormControl>
-            <FormControl id="Name" isRequired>
+            <FormControl id="Name">
               <FormLabel> Name</FormLabel>
               <Input
                 type="text"
@@ -111,7 +128,7 @@ function Signup() {
                 name={"name"}
               />
             </FormControl>
-            <FormControl id="Name" >
+            <FormControl id="Name">
               <FormLabel> Place</FormLabel>
               <Input
                 type="text"
